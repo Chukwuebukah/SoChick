@@ -1,6 +1,8 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaBars, FaTimes } from "react-icons/fa";
 
 const services = [
   {
@@ -56,24 +58,72 @@ const faqs = [
   },
 ];
 
-const page = () => {
+const Page = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <main className="min-h-screen text-foreground bg-background">
       <div className="mx-auto max-w-7xl px-6 py-10 lg:px-8 relative">
-        <header className="sticky top-4 z-20 mx-auto max-w-7xl bg-foreground/95 backdrop-blur-md rounded-2xl shadow-xl">
+        <header className="sticky top-4 z-50 mx-auto max-w-7xl rounded-2xl shadow-xl" style={{ backgroundColor: "#2C1B12" }}>
           <div className="flex items-center justify-between px-6 py-3 lg:px-8">
             <a href="#" className="flex items-center">
-              <Image src="/logo.png" alt="SoChicks Logo" width={100} height={100} className="w-auto h-16" priority />
+              <img src="/logo.png" alt="SoChicks Logo" className="w-auto h-16" />
             </a>
-            <nav className="hidden items-center gap-6 text-sm uppercase tracking-[0.24em] text-background/80 md:flex">
-              <a href="#about" className="transition hover:text-white font-semibold">About</a>
-              <a href="#services" className="transition hover:text-white font-semibold">Services</a>
-              <a href="#portfolio" className="transition hover:text-white font-semibold">Portfolio</a>
-              <a href="#academy" className="transition hover:text-white font-semibold">Academy</a>
-              <a href="#faq" className="transition hover:text-white font-semibold">FAQ</a>
-              <a href="#book" className="transition hover:text-white font-semibold">Contact</a>
+            
+            {/* Desktop Nav */}
+            <nav className="hidden items-center gap-8 md:flex">
+              {["#about", "#services", "#portfolio", "#academy", "#faq"].map((href) => {
+                const label = href.replace("#", "").charAt(0).toUpperCase() + href.replace("#", "").slice(1);
+                return (
+                  <a
+                    key={href}
+                    href={href}
+                    style={{ color: "#F9F7CE" }}
+                    className="text-xs font-bold uppercase tracking-[0.2em] transition-all duration-200 hover:opacity-70"
+                  >
+                    {label}
+                  </a>
+                );
+              })}
+              <a
+                href="#book"
+                style={{ backgroundColor: "#650D1F", color: "#F9F7CE" }}
+                className="ml-2 rounded-full px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] transition hover:opacity-90"
+              >
+                Book Now
+              </a>
             </nav>
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="md:hidden text-2xl p-2"
+              style={{ color: "#F9F7CE" }}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+            </button>
           </div>
+
+          {/* Mobile Nav Dropdown */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden border-t px-6 py-4 pb-6 space-y-4 flex flex-col rounded-b-2xl" style={{ backgroundColor: "#2C1B12", borderColor: "#4e352b" }}>
+              {["#about", "#services", "#portfolio", "#academy", "#faq", "#book"].map((href) => {
+                const label = href.replace("#", "").charAt(0).toUpperCase() + href.replace("#", "").slice(1);
+                return (
+                  <a
+                    key={href}
+                    href={href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{ color: "#F9F7CE" }}
+                    className="text-sm uppercase tracking-[0.24em] font-semibold hover:opacity-70 transition"
+                  >
+                    {label}
+                  </a>
+                );
+              })}
+            </div>
+          )}
         </header>
 
         <section className="mt-8 relative overflow-hidden rounded-4xl border border-border bg-white px-6 py-12 shadow-[0_30px_80px_rgba(44,27,18,0.08)] lg:px-10">
@@ -87,10 +137,14 @@ const page = () => {
                 We create looks and training experiences designed to help women own their power, present boldly, and leave a lasting impression.
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
-                <a href="#book" className="inline-flex items-center justify-center rounded-full bg-accent px-8 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-accent-soft">
+                <a
+                  href="#book"
+                  style={{ backgroundColor: "#650D1F", color: "#ffffff" }}
+                  className="inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-semibold uppercase tracking-[0.18em] transition hover:opacity-90"
+                >
                   Book a consultation
                 </a>
-                <a href="#academy" className="inline-flex items-center justify-center rounded-full border border-accent bg-transparent px-8 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-accent transition hover:bg-accent/10">
+                <a href="#academy" className="inline-flex items-center justify-center rounded-full border border-[#650D1F] bg-transparent px-8 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-[#650D1F] transition hover:bg-[#650D1F]/10">
                   Explore academy
                 </a>
               </div>
@@ -100,11 +154,11 @@ const page = () => {
               <img
                 src="https://i.pinimg.com/736x/da/c0/f5/dac0f576dd5ba38d8f23b6abf18e52cf.jpg"
                 alt="Bridal hairstyling and wig installation"
-                className="h-105 w-full object-cover"
+                className="w-full h-auto"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-foreground/90 via-transparent to-transparent p-6 text-white">
-                <p className="text-sm uppercase tracking-[0.3em] text-background">Sochick styling experience</p>
-                <p className="mt-2 max-w-sm text-lg font-medium">Luxury hair artistry for your most memorable moments.</p>
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent p-6 text-white">
+                <p className="text-sm uppercase tracking-[0.3em] text-background drop-shadow-md">Sochick styling experience</p>
+                <p className="mt-2 max-w-sm text-lg font-medium drop-shadow-md">Luxury hair artistry for your most memorable moments.</p>
               </div>
             </div>
           </div>
@@ -170,7 +224,7 @@ const page = () => {
               <img
                 src="https://i.pinimg.com/736x/4e/24/99/4e2499d8818538bc993777502a72f17b.jpg"
                 alt="Bridal hairstyling"
-                className="h-80 w-full object-cover"
+                className="w-full h-auto"
               />
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-foreground">Bridal styling</h3>
@@ -181,7 +235,7 @@ const page = () => {
               <img
                 src="https://i.pinimg.com/736x/e7/af/03/e7af03774007aa3f4f6e0a465a8158aa.jpg"
                 alt="Wig installation service"
-                className="h-80 w-full object-cover"
+                className="w-full h-auto"
               />
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-foreground">Wig installation</h3>
@@ -192,7 +246,7 @@ const page = () => {
               <img
                 src="https://i.pinimg.com/1200x/80/ab/19/80ab193e3f2daf8de5c452ccabb4f1ae.jpg"
                 alt="Beauty training session"
-                className="h-80 w-full object-cover"
+                className="w-full h-auto"
               />
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-foreground">Training academy</h3>
@@ -277,8 +331,8 @@ const page = () => {
                 <p className="mt-2 text-base text-foreground">hello@sochickbeauty.com</p>
               </div>
             </div>
-
-            <a href="https://wa.me/2348123456789" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-[#1ebd57]">
+            
+            <a href="https://wa.me/2348123456789" target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-[#1ebd57]">
               <FaWhatsapp className="text-xl" />
               Contact on WhatsApp
             </a>
@@ -308,4 +362,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
